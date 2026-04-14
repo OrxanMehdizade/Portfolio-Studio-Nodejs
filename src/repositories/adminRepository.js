@@ -12,6 +12,10 @@ const findById = (id, options = {}) => {
     return query;
 };
 
+const existsByRole = (role) => {
+    return adminModel.exists({ role });
+};
+
 const findByResetToken = (hashedToken) => {
     return adminModel.findOne({
         resetPasswordToken: hashedToken,
@@ -44,5 +48,6 @@ module.exports = {
     updateAdmin,
     existsByEmail,
     findByResetToken,
-    findByIdWithPassword
+    findByIdWithPassword,
+    existsByRole
 };

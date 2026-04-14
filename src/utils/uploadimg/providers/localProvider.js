@@ -1,25 +1,39 @@
 const fs = require('fs');
 const path = require('path');
-const { randomUUID } = require('crypto');
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
 
-const upload = async (fileBuffer, { folder }) => {
+const sanitizeFileName = (name) => {
+    return name
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9.\-_]/g, '')
+        .replace(/-+/g, '-');
+};
+
+const upload = async (fileBuffer, { folder, format, originalname }) => {
     const dir = path.join(UPLOAD_DIR, folder);
 
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    const ext = path.extname(originalname) || '';
-    const fileName = randomUUID() + ext;
+    const ext = originalname
+        ? path.extname(originalname)
+        : format ? `.${format}` : '';
+
+    const baseName = originalname
+        ? path.basename(originalname, ext)
+        : 'file';
+
+    const sanitized = sanitizeFileName(baseName);
+    const timestamp = Date.now();
+    const fileName = `${sanitized}_${timestamp}${ext}`;
     const filePath = path.join(dir, fileName);
 
     fs.writeFileSync(filePath, fileBuffer);
 
-    const url = `/uploads/${folder}/${fileName}`;
-
-    return { url, publicId: fileName };
+    return { url: `/uploads/${folder}/${fileName}`, publicId: fileName };
 };
 
 module.exports = { upload };

@@ -1,5 +1,13 @@
 const { createLogger, format, transports } = require('winston');
 const path = require('path');
+const fs = require('fs');
+
+const rootDir = process.cwd();
+const logDir = path.join(rootDir, 'src', 'logs');
+
+if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+}
 
 const logger = createLogger({
     level: 'error',
@@ -10,7 +18,7 @@ const logger = createLogger({
     ),
     transports: [
         new transports.File({
-            filename: path.join(process.cwd(), 'logs', 'error.log'),
+            filename: path.join(logDir, 'error.log'),
             level: 'error'
         })
     ]

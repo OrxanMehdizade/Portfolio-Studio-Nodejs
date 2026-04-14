@@ -7,4 +7,9 @@ const changePasswordSchema = Joi.object({
 });
 
 
-module.exports = { changePasswordSchema };
+const updateMeSchema = Joi.object({
+    name: Joi.string().trim().optional(),
+    email: Joi.string().email().optional(),
+}).min(1);
+
+module.exports = { changePasswordSchema, updateMeSchema };

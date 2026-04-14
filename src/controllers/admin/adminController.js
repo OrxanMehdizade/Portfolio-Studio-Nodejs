@@ -14,6 +14,11 @@ const changePassword = asyncHandler(async (req, res) => {
     res.json({ success: true, data });
 });
 
+const updateMy = asyncHandler(async (req, res) => {
+    const data = await adminService.updateMy(req.admin.id, req.body);
+    res.json({ success: true, data });
+});
+
 const uploadAvatar = asyncHandler( async (req, res) => {
     if (!req.file) {
         throw new ApiError('No file uploaded', 400);
@@ -24,4 +29,4 @@ const uploadAvatar = asyncHandler( async (req, res) => {
     res.json({ success: true, data: adminData });
 });
 
-module.exports = {getMy, changePassword, uploadAvatar};
+module.exports = {getMy, changePassword, updateMy, uploadAvatar};

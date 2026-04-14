@@ -40,7 +40,7 @@ const uploadAvatar = async (file) => {
     const existing = await portfolioRepo.getPortfolio();
     if (!existing) throw new ApiError('Portfolio not found', 404);
 
-    const result = await uploadFile(file.buffer, file.mimetype, tenantId);
+    const result = await uploadFile(file.buffer, file.mimetype, tenantId, file.originalname);
     const portfolio = await portfolioRepo.updatePortfolio({ profileAvatar: result.url });
     
     return portfolio;
@@ -68,7 +68,7 @@ const deleteField = async (fieldName) => {
 // ─── Upload (dinamik field/item üçün)
 
 const uploadFieldFile = async (file) => {
-    const result = await uploadFile(file.buffer, file.mimetype, tenantId);
+    const result = await uploadFile(file.buffer, file.mimetype, tenantId, file.originalname);
     return { url: result.url };
 };
 
@@ -144,13 +144,18 @@ const sendMail = async (email, message) => {
         allowedAttributes: {}
     });
 
+    const cleanEmail = sanitizeHtml(email, {
+        allowedTags: [],
+        allowedAttributes: {}
+    });
+
     await sendEmail({
         to: portfolio.email,
-        replyTo: email,
-        subject: `New message from ${email}`,
+        replyTo: cleanEmail,
+        subject: `New message from ${cleanEmail}`,
         html: `
             <h3>New contact form message</h3>
-            <p><strong>From:</strong> ${email}</p>
+            <p><strong>From:</strong> ${cleanEmail}</p>
             <p><strong>Message:</strong></p>
             <p>${cleanMessage}</p>
         `

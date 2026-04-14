@@ -1,8 +1,9 @@
-const client = require('../../../config/email/emailConfig');
+const getEmailProvider = require('../../../config/email/emailConfig');
 
 const resendProvider = async ({ to, subject, html, replyTo }) => {
+    const client = getEmailProvider();
     await client.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
+        from: `Portfolio Contact <${process.env.RESEND_FROM_EMAIL}>`,
         to,
         subject,
         html,

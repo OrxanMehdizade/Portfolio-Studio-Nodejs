@@ -10,7 +10,7 @@ const seedAdminUser = async () => {
         return;
     }
 
-    const adminExists = await adminRepo.existsByEmail(adminEmail);
+    const adminExists = await adminRepo.existsByRole('admin');
 
     if (!adminExists) {
         const hashedPwd = await hashPassword(adminPassword);

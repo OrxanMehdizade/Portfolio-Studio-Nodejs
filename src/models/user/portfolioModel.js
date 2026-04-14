@@ -9,8 +9,7 @@ const portfolioSchema = new Schema({
     description: {type: String},
     email: { 
         type: String, 
-        required: true, 
-        unique: true,
+        required: true,
         trim: true,
         match: [/.+@.+\..+/, "Please enter a valid email address"]
     },
